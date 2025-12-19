@@ -1,4 +1,4 @@
-package com.churninsight.backend.dto;
+package com.churnInsight.churnInsight.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

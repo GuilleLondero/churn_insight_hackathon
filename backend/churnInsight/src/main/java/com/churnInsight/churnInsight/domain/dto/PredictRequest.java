@@ -1,4 +1,4 @@
-package com.churninsight.backend.dto;
+package com.churnInsight.churnInsight.domain.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
