@@ -1,6 +1,8 @@
 package com.churnInsight.churnInsight.domain.dto;
 
+
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ public class PredictRequest {
     private Integer antiguedad;
 
     /** Tipo de plan contratado (ej: Basic, Premium) */
-    @NotNull
+    @NotBlank
     private String plan;
 
     /** Valor mensual del plan */
@@ -29,7 +31,7 @@ public class PredictRequest {
     private Double valorPlan;
 
     /** Método de pago utilizado por el cliente (ej: tarjeta, débito) */
-    @NotNull
+    @NotBlank
     private String metodoPago;
 
     /** Cantidad de facturas impagas */ 
