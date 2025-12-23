@@ -1,38 +1,32 @@
+
 package com.churnInsight.churnInsight.rest;
 
-// DTOs de entrada y salida 
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
-
-
-// Validación y comunicación Frontend
+import com.churnInsight.churnInsight.service.PredictionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//Devuelve JSON
 @RestController
-
-
-// Dirección: http://localhost:8080/api/v1
 @RequestMapping("/api/v1")
-
-// Conexion Frontend
 @CrossOrigin(origins = "*")
 public class PredictController {
 
+    private final PredictionService predictionService;
 
+    // Spring inyecta automáticamente el service
+    public PredictController(PredictionService predictionService) {
+        this.predictionService = predictionService;
+    }
 
-    
-     //Endpoint temporal para probar la comunicación.
     @PostMapping("/predict")
-    public ResponseEntity<PredictResponse> predict(@Valid @RequestBody PredictRequest request) {
+    public ResponseEntity<PredictResponse> predict(
+            @Valid @RequestBody PredictRequest request) {
 
+        // Delegamos la lógica al service
+        PredictResponse response = predictionService.predict(request);
 
-        // ESPACIO PARA EL SERVICE - comunicacion con modelo Python
-    
-        
-        // Código 200 OK
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(response);
     }
 }
