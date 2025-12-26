@@ -1,5 +1,6 @@
 package com.churnInsight.churnInsight.service;
 
+import com.churnInsight.churnInsight.client.DsClient;
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
 import com.churnInsight.churnInsight.entity.PredictionLog;
@@ -7,36 +8,65 @@ import com.churnInsight.churnInsight.repository.PredictionLogRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Map;
 
 @Service
 public class PredictionService {
 
     private final PredictionLogRepository predictionLogRepository;
+    private final DsClient dsClient;
 
-    public PredictionService(PredictionLogRepository predictionLogRepository) {
+    public PredictionService(PredictionLogRepository predictionLogRepository,
+                             DsClient dsClient) {
         this.predictionLogRepository = predictionLogRepository;
+        this.dsClient = dsClient;
     }
 
-    /**
-     * MVP: por ahora devuelve una respuesta "stub" y guarda un log en BD.
-     * Luego aquí se llamará al DS Client.
-     */
     public PredictResponse predict(PredictRequest request) {
 
-        // 1) Stub temporal (luego se reemplaza por la respuesta real de DS)
-        PredictResponse response = new PredictResponse("No cancelará", 0.35);
-
-        // 2) Construir log
         PredictionLog log = new PredictionLog();
         log.setTimestamp(Instant.now());
-        log.setPrediccion(response.getPrediccion());
-        log.setProbabilidadChurn(response.getProbabilidadChurn());
-        log.setModeloVersion("stub-v0");
-        log.setStatus("OK");
 
-        // 3) Guardar en Postgres
-        predictionLogRepository.save(log);
+        try {
+            // 1) Llamar a Data Science (FastAPI)
+            Map<String, Object> dsResponse = dsClient.predict(request);
 
-        return response;
+            // 2) Convertir respuesta DS -> PredictResponse
+            String prediccion = (String) dsResponse.get("prediccion");
+
+            Number probNum = (Number) dsResponse.get("probabilidad_churn");
+            double probabilidad = (probNum != null) ? probNum.doubleValue() : 0.0;
+
+            PredictResponse response =
+                    new PredictResponse(prediccion, probabilidad);
+
+            // 3) Guardar log OK en Postgres
+            log.setPrediccion(prediccion);
+            log.setProbabilidadChurn(probabilidad);
+
+            Object modeloVersion = dsResponse.get("modelo_version");
+            log.setModeloVersion(
+                    modeloVersion != null ? modeloVersion.toString() : "v1"
+            );
+
+            log.setStatus("OK");
+            log.setErrorMessage(null);
+
+            predictionLogRepository.save(log);
+
+            return response;
+
+        } catch (Exception ex) {
+            // 4) Fallback si DS no está disponible
+            log.setPrediccion("Predicción no disponible");
+            log.setProbabilidadChurn(0.0);
+            log.setModeloVersion("ds-error");
+            log.setStatus("ERROR");
+            log.setErrorMessage("DS no disponible: " + ex.getMessage());
+
+            predictionLogRepository.save(log);
+
+            return new PredictResponse("Predicción no disponible", 0.0);
+        }
     }
 }
