@@ -22,7 +22,7 @@ public class PredictionService {
         this.dsClient = dsClient;
     }
 
-    public PredictResponse predict(PredictRequest request) {
+    public PredictResponse predict(PredictRequest request, String nombreUsuario) {
 
         PredictionLog log = new PredictionLog();
         log.setTimestamp(Instant.now());
@@ -51,6 +51,9 @@ public class PredictionService {
 
             log.setStatus("OK");
             log.setErrorMessage(null);
+            
+            // El requisito clave: Guardar el usuario
+            log.setUsuario(nombreUsuario);
 
             predictionLogRepository.save(log);
 
