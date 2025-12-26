@@ -1,10 +1,15 @@
 package com.churnInsight.churnInsight.entity;
 
-import jakarta.persistence.*;
+import java.time.Instant;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.Instant;
 
 @Data
 @NoArgsConstructor
@@ -38,5 +43,9 @@ public class PredictionLog {
     // Mensaje de error (solo si status = ERROR)
     @Column(length = 1000)
     private String errorMessage;
+
+    // Usuario
+    @Column(name = "usuario")
+    private String usuario;
 }
 
