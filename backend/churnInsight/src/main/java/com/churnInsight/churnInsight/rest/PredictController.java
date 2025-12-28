@@ -2,8 +2,6 @@ package com.churnInsight.churnInsight.rest;
 
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
-import com.churnInsight.churnInsight.entity.PredictionLog;
-import com.churnInsight.churnInsight.repository.PredictionLogRepository;
 import com.churnInsight.churnInsight.service.PredictionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Instant; // <--- Importamos el reloj correcto (Instant)
 
 @RestController
 @RequestMapping("/api/v1")
