@@ -1,8 +1,10 @@
 package com.churnInsight.churnInsight.rest;
 
+import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
-import com.churnInsight.churnInsight.repository.UsuarioRepository;
 import com.churnInsight.churnInsight.security.JwtService;
+import com.churnInsight.churnInsight.service.UsuarioService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,17 +20,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     // Endpoint para Registar
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> register(@RequestBody UsuarioDTO usuario) {
         // encripta la contraseña
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuarioRepository.save(usuario);
+        usuarioService.crearUsuario(new Usuario(usuario));
         
         Map<String, String> response = new HashMap<>();
         response.put("mensaje", "Usuario registrado con éxito: " + usuario.getUsuario());
@@ -37,13 +39,14 @@ public class AuthController {
 
     // Endpoint para LOGIN y obtener TOKEN
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario request) {
+    public ResponseEntity<?> login(@RequestBody UsuarioDTO request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsuario(), request.getPassword())
         );
         
         // Se busca al usuario y se genera el token
-        Usuario user = usuarioRepository.findByUsuario(request.getUsuario()).orElseThrow();
+        Usuario user = usuarioService.getByUsuario(request.getUsuario());
+        System.out.println(user.getUsuario() + user.getPassword());
         
         // Convertimos a UserDetails
         var userDetails = org.springframework.security.core.userdetails.User.builder()

@@ -1,7 +1,9 @@
 package com.churnInsight.churnInsight.rest;
 
+import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
-import com.churnInsight.churnInsight.repository.UsuarioRepository;
+import com.churnInsight.churnInsight.service.UsuarioService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,19 +16,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
 
     // READ 
     @GetMapping
     public List<Usuario> getAllUsuarios() {
-        return usuarioRepository.findAll();
+        return usuarioService.getAll();
     }
 
     // UPDATE 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetalles) {
-        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDetalles) {
+        Usuario usuario = usuarioService.getUsuarioById(id);
 
         usuario.setUsuario(usuarioDetalles.getUsuario());
         usuario.setEmail(usuarioDetalles.getEmail());
@@ -35,14 +37,14 @@ public class UserController {
             usuario.setPassword(passwordEncoder.encode(usuarioDetalles.getPassword()));
         }
 
-        usuarioRepository.save(usuario);
+        usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.ok("Usuario actualizado");
     }
 
     // DELETE 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
-        usuarioRepository.deleteById(id);
+        usuarioService.deleteUsuarioById(id);
         return ResponseEntity.ok("Usuario eliminado");
     }
 }
