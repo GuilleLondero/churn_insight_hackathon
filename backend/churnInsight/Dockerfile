@@ -1,5 +1,5 @@
-FROM imagen base para el build
-ARG JAR_FILE= direccion donde va a estar el archivo jar
-COPY copia del jar anterior y el nombre que deseemos
-EXPOSE puerto
-ENTRYPOINT aca especificamos que utilizamos para ejecutar, que tipo de archivo es y el nombre que usamos en COPY
+FROM eclipse-temurin:17-jre
+ARG JAR_FILE= target/churnisight-0.0.1.jar
+COPY ${JAR_FILE} churnisight_app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "jar", "churnisight_app.jar"]
