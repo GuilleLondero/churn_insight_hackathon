@@ -36,7 +36,8 @@ public class SecurityConfig {
 
         // 2. Configuración de Rutas 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() 
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() 
                 .anyRequest().authenticated()            
         );
 
