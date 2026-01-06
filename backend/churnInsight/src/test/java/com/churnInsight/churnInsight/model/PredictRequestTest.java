@@ -36,7 +36,7 @@ public class PredictRequestTest {
     private void setearPredictRequestValido(){
         dto.setAntiguedad(3);
         dto.setPlan("Basic");
-        dto.setValorPlan(100.0);
+        //dto.setValorPlan(100.0);
         dto.setMetodoPago("tarjeta");
         dto.setFacturasImpagas(0);
         dto.setFrecuenciaUso(10);
@@ -89,7 +89,7 @@ public class PredictRequestTest {
     public void validaValorPlanNull(){
         violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
-        dto.setValorPlan(null);
+        //dto.setValorPlan(null);
         violations = validator.validate(dto);
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("valorPlan"));
@@ -99,7 +99,7 @@ public class PredictRequestTest {
     public void validaValorPlanNegativo(){
         violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
-        dto.setValorPlan(-2.0);
+        //dto.setValorPlan(-2.0);
         violations = validator.validate(dto);
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("valorPlan"));

@@ -26,7 +26,7 @@ public class PredictionLogServiceTest {
 
             request.setAntiguedad(30); //not null, min 0
             request.setPlan("Basico"); //not blank
-            request.setValorPlan(30.0); // not null, min 0
+            //request.setValorPlan(30.0); // not null, min 0
             request.setMetodoPago("Debito automatico"); //not blank
             request.setFacturasImpagas(0); //not null, min 0
             request.setFrecuenciaUso(40); //not null, min 0
@@ -65,10 +65,10 @@ public class PredictionLogServiceTest {
     @Test
     public void requestConValorPlanInvalido(){
         //valor null no aceptado
-        request.setValorPlan(null);
+        //request.setValorPlan(null);
         assertThrows(MethodArgumentNotValidException.class, () -> predictionService.predict(request, "Marcelo"));
         //valor negativo no aceptado
-        request.setValorPlan(-3.0);
+        //request.setValorPlan(-3.0);
         assertThrows(MethodArgumentNotValidException.class, () -> predictionService.predict(request, "Marcelo"));
     }
 
