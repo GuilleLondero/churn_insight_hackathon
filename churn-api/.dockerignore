@@ -1,0 +1,61 @@
+**CONTENIDO COMPLETO**:
+```
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.pyc
+
+# Entornos virtuales
+venv/
+ENV/
+env/
+.venv
+virtualenv/
+
+# Archivos de pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# Logs
+*.log
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# Git
+.git/
+.gitignore
+
+# Documentacion
+*.md
+docs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Temporal
+*.tmp
+*.bak
+*.old
