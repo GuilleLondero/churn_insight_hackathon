@@ -1,5 +1,7 @@
 package com.churnInsight.churnInsight.domain.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +20,7 @@ public class PredictResponse {
 
     /** Probabilidad de churn (0.0 a 1.0) */
     private Double probabilidadChurn;
+
+    private List<FeatureDTO> topFeatures;
 
 }

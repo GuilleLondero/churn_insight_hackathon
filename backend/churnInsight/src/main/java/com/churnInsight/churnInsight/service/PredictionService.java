@@ -1,6 +1,7 @@
 package com.churnInsight.churnInsight.service;
 
 import com.churnInsight.churnInsight.client.DsClient;
+import com.churnInsight.churnInsight.domain.dto.FeatureDTO;
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
 import com.churnInsight.churnInsight.entity.PredictionLog;
@@ -8,6 +9,8 @@ import com.churnInsight.churnInsight.repository.PredictionLogRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -36,9 +39,10 @@ public class PredictionService {
 
             Number probNum = (Number) dsResponse.get("probabilidad_churn");
             double probabilidad = (probNum != null) ? probNum.doubleValue() : 0.0;
+            List<FeatureDTO> topFeatures = (List) dsResponse.get("top_features");
 
             PredictResponse response =
-                    new PredictResponse(prediccion, probabilidad);
+                    new PredictResponse(prediccion, probabilidad, topFeatures);
 
             // 3) Guardar log OK en Postgres
             log.setPrediccion(prediccion);
@@ -69,7 +73,9 @@ public class PredictionService {
 
             predictionLogRepository.save(log);
 
-            return new PredictResponse("Predicción no disponible", 0.0);
+            List lista = new ArrayList(); // Se agreaga lista vacia a la respuesta
+
+            return new PredictResponse("Predicción no disponible", 0.0,lista);
         }
     }
 }
