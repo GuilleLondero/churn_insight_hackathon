@@ -30,7 +30,7 @@ public class PredictResponse {
     private Float umbralDecicion;
 
     @JsonAlias("top_features")
-    private List<FeatureDTO> topFeatures;
+    private List<TopFeatureDto> topFeatures;
 
     @JsonAlias("modelo_version")
     private String modeloVersion;
