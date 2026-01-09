@@ -11,7 +11,8 @@ public class DsClient {
     // Permite realizar llamadas HTTP al microservicio de Data Science
     private final RestTemplate restTemplate = new RestTemplate();
     // URL del microservicio DS
-    private static final String DS_URL = "https://churn-api-v2-0.onrender.com/predict";
+    private static final String DS_URL = "https://churn-api-v2-0.onrender.com/predict"; //uso modelo desplegado
+    //private static final String DS_URL = "http://localhost:8000/predict"; //uso modelo local
 
     /**
     * Envía los datos del cliente al microservicio de Data Science (FastAPI)

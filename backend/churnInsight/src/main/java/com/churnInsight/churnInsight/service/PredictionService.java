@@ -7,10 +7,18 @@ import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.PredictRequestToD
 import com.churnInsight.churnInsight.entity.PredictionLog;
 import com.churnInsight.churnInsight.exception.DsServiceException;
 import com.churnInsight.churnInsight.repository.PredictionLogRepository;
+
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.MethodNotAllowedException;
 
 import java.time.Instant;
 @Service
+@Validated
 public class PredictionService {
 
     private final PredictionLogRepository predictionLogRepository;
@@ -24,7 +32,7 @@ public class PredictionService {
         this.dataConverter = new DataConverter();
     }
 
-    public PredictResponse predict(PredictRequest request, String nombreUsuario) {
+    public PredictResponse predict(@Valid PredictRequest request, @NotBlank String nombreUsuario) {
 
 
         try {
@@ -41,6 +49,16 @@ public class PredictionService {
             return response;
 
         }  catch (DsServiceException ex) {
+            // Log ERROR + re-lanzar para que GlobalExceptionHandler devuelva 503
+            predictionLogRepository.save(crearLog(null, nombreUsuario, ex));
+
+            throw ex;
+        }  catch (MethodNotAllowedException ex) {
+            // Log ERROR + re-lanzar para que GlobalExceptionHandler devuelva 503
+            predictionLogRepository.save(crearLog(null, nombreUsuario, ex));
+
+            throw ex;
+        }   catch (ConstraintViolationException ex) {
             // Log ERROR + re-lanzar para que GlobalExceptionHandler devuelva 503
             predictionLogRepository.save(crearLog(null, nombreUsuario, ex));
 
