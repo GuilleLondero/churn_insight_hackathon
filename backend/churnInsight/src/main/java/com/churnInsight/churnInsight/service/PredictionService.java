@@ -5,11 +5,11 @@ import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
 import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.PredictRequestToDS;
 import com.churnInsight.churnInsight.entity.PredictionLog;
+import com.churnInsight.churnInsight.exception.DsServiceException;
 import com.churnInsight.churnInsight.repository.PredictionLogRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-
 @Service
 public class PredictionService {
 
@@ -40,11 +40,11 @@ public class PredictionService {
             
             return response;
 
-        } catch (Exception ex) {
-            // 4) Fallback si DS no está disponible
+        }  catch (DsServiceException ex) {
+            // Log ERROR + re-lanzar para que GlobalExceptionHandler devuelva 503
             predictionLogRepository.save(crearLog(null, nombreUsuario, ex));
 
-            throw new RuntimeException(ex.getMessage());
+            throw ex;
         }
     }
 
