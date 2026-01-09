@@ -1,11 +1,9 @@
 package com.churnInsight.churnInsight.client;
+import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.PredictRequestToDS;
 
-import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 public class DsClient {
@@ -14,23 +12,22 @@ public class DsClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     // URL del microservicio DS
-    private static final String DS_URL = "http://localhost:8000/predict";
+    private static final String DS_URL = "https://churn-api-v2-0.onrender.com/predict";
 
     /**
     * Envía los datos del cliente al microservicio de Data Science (FastAPI)
     * y devuelve la respuesta del modelo predictivo en formato JSON genérico.
     */
-    public Map<String, Object> predict(PredictRequest request) {
-
+    public String predict(PredictRequestToDS request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<PredictRequest> entity =
+        HttpEntity<PredictRequestToDS> entity =
                 new HttpEntity<>(request, headers);
 
-        ResponseEntity<Map> response =
-                restTemplate.postForEntity(DS_URL, entity, Map.class);
 
+        ResponseEntity<String> response =
+                restTemplate.postForEntity(DS_URL, entity, String.class);
         return response.getBody();
     }
 }
