@@ -31,7 +31,7 @@ public class PredictionLog {
 
     // Probabilidad de churn (0.0 - 1.0)
     @Column(nullable = false)
-    private Double probabilidadChurn;
+    private Float probabilidadChurn;
 
     // Versión del modelo (ej: "v1.0") - útil para auditoría
     private String modeloVersion;

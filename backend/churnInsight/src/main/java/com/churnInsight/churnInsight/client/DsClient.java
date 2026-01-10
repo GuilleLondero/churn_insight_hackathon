@@ -1,36 +1,46 @@
 package com.churnInsight.churnInsight.client;
-
-import com.churnInsight.churnInsight.domain.dto.PredictRequest;
+import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.PredictRequestToDS;
+import com.churnInsight.churnInsight.exception.DsServiceException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
+import org.springframework.web.client.*;
 
 @Component
 public class DsClient {
 
-    // Permite realizar llamadas HTTP (POST) al servicio de Data Science
+    // Permite realizar llamadas HTTP al microservicio de Data Science
     private final RestTemplate restTemplate = new RestTemplate();
-
     // URL del microservicio DS
-    private static final String DS_URL = "http://localhost:8000/predict";
+    private static final String DS_URL = "https://churn-api-v2-0.onrender.com/predict"; //uso modelo desplegado
+    //private static final String DS_URL = "http://localhost:8000/predict"; //uso modelo local
 
     /**
     * Envía los datos del cliente al microservicio de Data Science (FastAPI)
     * y devuelve la respuesta del modelo predictivo en formato JSON genérico.
     */
-    public Map<String, Object> predict(PredictRequest request) {
+    public String predict(PredictRequestToDS request) {
+        try{        
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<PredictRequestToDS> entity =
+                    new HttpEntity<>(request, headers);
 
-        HttpEntity<PredictRequest> entity =
-                new HttpEntity<>(request, headers);
 
-        ResponseEntity<Map> response =
-                restTemplate.postForEntity(DS_URL, entity, Map.class);
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity(DS_URL, entity, String.class);
+            return response.getBody();
+        } catch (ResourceAccessException ex) {
+            // Ej: DS caído, connection refused, timeout
+            throw new DsServiceException("No se pudo conectar a DS", ex);
 
-        return response.getBody();
+        } catch (HttpStatusCodeException ex) {
+            // Ej: DS respondió 400/500 con body
+            throw new DsServiceException("DS respondió con error HTTP: " + ex.getStatusCode(), ex);
+
+        } catch (RestClientException ex) {
+            // Cualquier otro error de RestTemplate
+            throw new DsServiceException("Error llamando a DS", ex);
+        }
     }
 }

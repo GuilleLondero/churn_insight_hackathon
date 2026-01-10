@@ -1,5 +1,10 @@
 package com.churnInsight.churnInsight.domain.dto;
 
+import java.util.List;
+
+import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.Prediccion;
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +19,20 @@ import lombok.NoArgsConstructor;
 public class PredictResponse {
 
     /** Resultado de la predicción (ej: "Va a cancelar" / "Va a continuar") */
-    private String prediccion;
+    @JsonAlias("prediccion")
+    private Prediccion prediccion;
 
     /** Probabilidad de churn (0.0 a 1.0) */
-    private Double probabilidadChurn;
+    @JsonAlias("probabilidad_churn")
+    private Float probabilidadChurn;
+
+    @JsonAlias("umbral_decision")
+    private Float umbralDecicion;
+
+    @JsonAlias("top_features")
+    private List<TopFeatureDto> topFeatures;
+
+    @JsonAlias("modelo_version")
+    private String modeloVersion;
 
 }

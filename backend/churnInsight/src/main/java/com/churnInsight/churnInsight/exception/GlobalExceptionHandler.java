@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.validation.ConstraintViolationException;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -27,6 +29,18 @@ public class GlobalExceptionHandler {
         ApiError body = new ApiError("Validación fallida", detalles, Instant.now());
         return ResponseEntity.badRequest().body(body);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleValidation(ConstraintViolationException ex) {
+        List<ApiError.ApiFieldError> detalles = ex.getConstraintViolations()
+                .stream()
+                .map(err -> new ApiError.ApiFieldError(err.getMessageTemplate(), err.getMessage()))
+                .toList();
+
+        ApiError body = new ApiError("Validación fallida", detalles, Instant.now());
+        return ResponseEntity.badRequest().body(body);
+    }
+
 
     @ExceptionHandler(DsServiceException.class)
     public ResponseEntity<ApiError> handleDs(DsServiceException ex) {
