@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Ping health endpoint
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://churn-api-v2-0.onrender.com/health
+          curl -s https://churn-api-v2-0.onrender.com/health
           
       - name: Ping swagger endpoint back
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://backend-churninsight-app-1.onrender.com/swagger-ui/index.html
+          curl -s https://backend-churninsight-app-1.onrender.com/swagger-ui/index.html
