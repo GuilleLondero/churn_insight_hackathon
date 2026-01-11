@@ -23,7 +23,7 @@ services:
       - "8080:8080"
     environment:
       DB_NAME: churninsight
-      DB_URL: postgresql://postgres:5432/churninsight
+      DATABASE_URL: postgresql://postgres:5432/churninsight
       DB_PORT: 5432
       DB_USNAME: postgres
       DB_PS: matiroot
