@@ -3,6 +3,8 @@ package com.churnInsight.churnInsight.rest;
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
 import com.churnInsight.churnInsight.service.PredictionService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +21,7 @@ public class PredictController {
     private final PredictionService predictionService;
 
     @PostMapping("/predict")
-    public ResponseEntity<PredictResponse> predict(@RequestBody PredictRequest request) {
+    public ResponseEntity<PredictResponse> predict(@RequestBody @Valid PredictRequest request) {
         
         // 1. Obtener quién está llamando (El piloto)
         String nombreUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
