@@ -67,6 +67,15 @@ public class PredictRequestTest {
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("antiguedad"));
     }
+    @Test
+    public void validaAntiguedadMayorA120(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setAntiguedad(122);
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("antiguedad"));
+    }
 
     @Test
     public void validaPlanStringEnBlanco(){
@@ -86,6 +95,28 @@ public class PredictRequestTest {
         violations = validator.validate(dto);
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("plan"));
+    }
+    
+    @Test
+    public void validaValoresCorrectosPlan(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setPlan("Super");
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("plan"));
+        //valores correctos no lanzan error
+        dto.setPlan("basico");
+        violations = validator.validate(dto);
+        assertThat(violations.isEmpty());
+        
+        dto.setPlan("estandar");
+        violations = validator.validate(dto);
+        assertThat(violations.isEmpty());
+
+        dto.setPlan("premium");
+        violations = validator.validate(dto);
+        assertThat(violations.isEmpty());
     }
 
     @Test
@@ -127,6 +158,16 @@ public class PredictRequestTest {
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("facturasImpagas"));
     }
+    
+    @Test
+    public void validarFacturasImpagasSuperaMaximo(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setFacturasImpagas(11);
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("facturasImpagas"));
+    }
 
     @Test
     public void validarFrecuenciaUsoNull(){
@@ -143,6 +184,16 @@ public class PredictRequestTest {
         violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
         dto.setFrecuenciaUso(-3);
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("frecuenciaUso"));
+    }
+    
+    @Test
+    public void validarFrecuenciaUsoSuperMaximo(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setFrecuenciaUso(31);
         violations = validator.validate(dto);
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("frecuenciaUso"));
@@ -197,6 +248,24 @@ public class PredictRequestTest {
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("tipoContrato"));
     }
+    
+    @Test
+    public void validarTipoContratoValidos(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setTipoContrato("diario");
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("tipoContrato"));
+
+        //Con valores correctos no hay error
+        dto.setTipoContrato("mensual");
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setTipoContrato("anual");
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+    }
 
     @Test
     public void validarCambiosPlanNull(){
@@ -246,6 +315,26 @@ public class PredictRequestTest {
         violations = validator.validate(dto);
         assertThat(violations)
                 .anyMatch(v -> v.getPropertyPath().toString().equals("canalAdquisicion"));
+    }
+    @Test
+    public void validarCanalesAdquisicionValidos(){
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setCanalAdquisicion("publicidad");
+        violations = validator.validate(dto);
+        assertThat(violations)
+                .anyMatch(v -> v.getPropertyPath().toString().equals("canalAdquisicion"));
+
+        //Con valores correctos no hay error
+        dto.setCanalAdquisicion("web");
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setCanalAdquisicion("referido");
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
+        dto.setCanalAdquisicion("redes_sociales");
+        violations = validator.validate(dto);
+        assertTrue(violations.isEmpty());
     }
 
 }
