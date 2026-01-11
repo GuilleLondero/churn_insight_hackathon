@@ -1,10 +1,12 @@
 package com.churnInsight.churnInsight.rest;
 
 import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
+import com.churnInsight.churnInsight.domain.dto.UsuarioLoginDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
 import com.churnInsight.churnInsight.security.JwtService;
 import com.churnInsight.churnInsight.service.UsuarioService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +29,7 @@ public class AuthController {
 
     // Endpoint para Registar
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UsuarioDTO usuario) {
+    public ResponseEntity<?> register(@RequestBody @Valid UsuarioDTO usuario) {
         // encripta la contraseña
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuarioService.crearUsuario(new Usuario(usuario));
@@ -39,7 +41,8 @@ public class AuthController {
 
     // Endpoint para LOGIN y obtener TOKEN
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UsuarioDTO request) {
+    public ResponseEntity<?> login(@RequestBody @Valid UsuarioLoginDTO request) {//Se usa Usuario login para que la validacion
+                                                                                 //no pida ingresar un email o algun otro campo con validacion.
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsuario(), request.getPassword())
         );
