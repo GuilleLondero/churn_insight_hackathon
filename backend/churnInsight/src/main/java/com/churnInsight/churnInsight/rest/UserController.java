@@ -1,9 +1,11 @@
 package com.churnInsight.churnInsight.rest;
 
 import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
+import com.churnInsight.churnInsight.domain.dto.UsuarioRespuestaDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
 import com.churnInsight.churnInsight.service.UsuarioService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,13 +23,14 @@ public class UserController {
 
     // READ 
     @GetMapping
-    public List<Usuario> getAllUsuarios() {
-        return usuarioService.getAll();
+    public List<UsuarioRespuestaDTO> getAllUsuarios() {
+        return usuarioService.getAll().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
+                                                                                               //a usuario de respuesta (no muestra la contraseña)
     }
 
     // UPDATE 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDetalles) {
+    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) {
         Usuario usuario = usuarioService.getUsuarioById(id);
 
         usuario.setUsuario(usuarioDetalles.getUsuario());
