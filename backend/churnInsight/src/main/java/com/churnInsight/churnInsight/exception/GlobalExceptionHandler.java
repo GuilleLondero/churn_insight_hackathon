@@ -2,15 +2,19 @@ package com.churnInsight.churnInsight.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.churnInsight.churnInsight.exception.ApiError.ApiFieldError;
+
 import jakarta.validation.ConstraintViolationException;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestControllerAdvice
@@ -41,6 +45,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleValidation(DataIntegrityViolationException ex) {
+        List<ApiError.ApiFieldError> detalles = new ArrayList<>();                
+        ApiFieldError apierr = new ApiError.ApiFieldError(ex.getMostSpecificCause().getMessage(), ex.getLocalizedMessage());
+        detalles.add(apierr);
+        
+        ApiError body = new ApiError("Validación fallida", detalles, Instant.now());
+        return ResponseEntity.badRequest().body(body);
+    }
 
     @ExceptionHandler(DsServiceException.class)
     public ResponseEntity<ApiError> handleDs(DsServiceException ex) {
