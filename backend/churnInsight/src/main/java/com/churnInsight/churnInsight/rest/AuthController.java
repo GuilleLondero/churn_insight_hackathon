@@ -20,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://127.0.0.1:5500/")
 public class AuthController {
 
     private final UsuarioService usuarioService;
