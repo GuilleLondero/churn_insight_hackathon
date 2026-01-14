@@ -36,10 +36,15 @@ public class SecurityConfig {
 
         // 2. Configuración de Rutas 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() 
-                .anyRequest().authenticated()            
-        );
+            .requestMatchers("/auth/**").permitAll()
+            .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+            
+            // --- NUEVA LÍNEA DE SEGURIDAD (SOLO ADMINS) ---
+            .requestMatchers("/admin/**").hasRole("ADMIN") 
+            // ----------------------------------------------
+
+            .anyRequest().authenticated()            
+    );
 
         // 3. Gestión de Sesión 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
