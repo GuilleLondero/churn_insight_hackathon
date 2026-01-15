@@ -2,15 +2,10 @@ package com.churnInsight.churnInsight.rest;
 
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
-import com.churnInsight.churnInsight.entity.Usuario;
-import com.churnInsight.churnInsight.service.CsvService;
 import com.churnInsight.churnInsight.service.PredictionService;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import java.io.InputStreamReader;
 import java.util.List;
 
 import org.springframework.http.MediaType;
