@@ -42,10 +42,10 @@ public class SecurityConfig {
         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() // Documentación
         
         // Solo el SUPER_ADMIN puede crear o borrar admins 
-        .requestMatchers("/super/**").hasAuthority("SUPER_ADMIN")
+        .requestMatchers("/super/**").hasAuthority("ROLE_SUPER_ADMIN")
         
         // Solo ADMIN pueden ver estadisticas 
-        .requestMatchers("/logs/**").hasAuthority("ADMIN") 
+        .requestMatchers("/logs/**").hasAuthority("ROLE_ADMIN") 
         
         // Otra cuestion requiere estar autenticada
         .anyRequest().authenticated()
