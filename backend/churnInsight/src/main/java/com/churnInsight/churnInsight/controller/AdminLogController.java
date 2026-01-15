@@ -1,40 +1,37 @@
 package com.churnInsight.churnInsight.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.churnInsight.churnInsight.domain.dto.DashLogsDTO;
+import com.churnInsight.churnInsight.service.DashboardService;
+
 @RestController
-@RequestMapping("/admin") // Rutas de administración
+@RequestMapping("/logs")
 public class AdminLogController {
 
-    @GetMapping("/logs")
-    public ResponseEntity<List<String>> getSystemLogs() {
+    @Autowired
+    private DashboardService dashboardService;
 
-        try {
+    // 1. Ver estadísticas en general
+    // Endpoint: GET /logs
+    @GetMapping
+    public ResponseEntity<DashLogsDTO> obtenerLogsGlobales() {
+        // Llamamos al servicio con null 
+        DashLogsDTO stats = dashboardService.obtenerEstadisticas(null);
+        return ResponseEntity.ok(stats);
+    }
 
-            // Busca el archivo generado
-            Path logPath = Paths.get("logs/churn-insight.log");
-
-            if (!Files.exists(logPath)) {
-                return ResponseEntity.ok(Collections.singletonList("El sistema está encendido, pero aún no hay registros de telemetría hoy."));
-            }
-
-            // Lee el archivo y se envia como lista
-            List<String> lines = Files.readAllLines(logPath);
-            return ResponseEntity.ok(lines);
-
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError()
-                    .body(Collections.singletonList("Error crítico leyendo logs: " + e.getMessage()));
-        }
+    // 2. Ver estadísticas de un usuario en específico
+    // Endpoint: GET /logs/user/{usuario}
+    @GetMapping("/user/{usuario}")
+    public ResponseEntity<?> obtenerLogsDeUsuario(@PathVariable String usuario) {
+        // Se llama con el nombre del usuario
+        DashLogsDTO stats = dashboardService.obtenerEstadisticas(usuario);
+        return ResponseEntity.ok(stats);
     }
 }
