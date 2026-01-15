@@ -7,16 +7,15 @@ import com.churnInsight.churnInsight.domain.dto.requestToDSDTO.PredictRequestToD
 import com.churnInsight.churnInsight.entity.PredictionLog;
 import com.churnInsight.churnInsight.exception.DsServiceException;
 import com.churnInsight.churnInsight.repository.PredictionLogRepository;
-
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.MethodNotAllowedException;
-
 import java.time.Instant;
+import java.util.List;
 @Service
 @Validated
 public class PredictionService {
@@ -24,12 +23,14 @@ public class PredictionService {
     private final PredictionLogRepository predictionLogRepository;
     private final DsClient dsClient;
     private final DataConverter dataConverter;
+    private final CsvService csvService;
 
     public PredictionService(PredictionLogRepository predictionLogRepository,
                              DsClient dsClient) {
         this.predictionLogRepository = predictionLogRepository;
         this.dsClient = dsClient;
         this.dataConverter = new DataConverter();
+        this.csvService = new CsvService();
     }
 
     public PredictResponse predict(@Valid PredictRequest request, @NotBlank String nombreUsuario) {
@@ -90,5 +91,11 @@ public class PredictionService {
 
 
         return log;
+    }
+
+    public List<PredictResponse> batchPrediction(MultipartFile file, String nombreUsuario){
+         List<PredictRequest> requests = csvService.parse(file);
+
+        return requests.stream().map(r -> predict(r, nombreUsuario)).toList();
     }
 }
