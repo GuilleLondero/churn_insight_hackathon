@@ -1,7 +1,6 @@
 package com.churnInsight.churnInsight.domain.dto;
 
 import java.time.Instant;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
