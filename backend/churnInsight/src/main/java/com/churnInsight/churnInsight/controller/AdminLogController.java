@@ -2,7 +2,6 @@ package com.churnInsight.churnInsight.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ public class AdminLogController {
 
     // 1. Ver estadísticas en general
     // Endpoint: GET /logs
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<DashLogsDTO> obtenerLogsGlobales() {
         // Llamamos al servicio con null 
@@ -32,7 +30,6 @@ public class AdminLogController {
 
     // 2. Ver estadísticas de un usuario en específico
     // Endpoint: GET /logs/user/{usuario}
-    @PreAuthorize("hasAnyRole('USUARIO','ADMIN')")
     @GetMapping("/user/{usuario}")
     public ResponseEntity<?> obtenerLogsDeUsuario(@PathVariable String usuario) {
         // Se llama con el nombre del usuario

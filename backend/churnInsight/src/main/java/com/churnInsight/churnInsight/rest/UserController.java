@@ -24,7 +24,6 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     // READ
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UsuarioRespuestaDTO> getAllUsuarios() {
         return usuarioService.getAll().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
@@ -48,7 +47,6 @@ public class UserController {
     }
 
     // DELETE 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
         usuarioService.deleteUsuarioById(id);
