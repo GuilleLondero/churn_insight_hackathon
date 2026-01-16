@@ -18,18 +18,19 @@ public class DashboardService {
     private PredictionLogRepository repository;
 
     public DashLogsDTO obtenerEstadisticas(String usuario) {
-        List<PredictionLog> logs;
-
-        if (usuario == null || usuario.isEmpty()) {
-            logs = repository.findAll(); // Admin ve todo 
-        } else {
-            logs = repository.findByUsuario(usuario); // Usuario ve solo lo suyo 
-        }
-
-        return calcularMetricas(logs);
+        //List<PredictionLog> logs;
+//
+        //if (usuario == null || usuario.isEmpty()) {
+        //    logs = repository.findAll(); // Admin ve todo 
+        //} else {
+        //    logs = repository.findByUsuario(usuario); // Usuario ve solo lo suyo 
+        //}
+//
+        //return calcularMetricas(logs);
+        return repository.getPredictionStats(usuario);
     }
 
-    private DashLogsDTO calcularMetricas(List<PredictionLog> logs) {
+   /*  private DashLogsDTO calcularMetricas(List<PredictionLog> logs) {
         DashLogsDTO stats = new DashLogsDTO();
 
         // 1. Total de Predicciones
@@ -109,5 +110,5 @@ public class DashboardService {
         stats.setTotalRiesgoMedio((int) riesgoMedio);
 
         return stats;
-    }
+    } */
 }

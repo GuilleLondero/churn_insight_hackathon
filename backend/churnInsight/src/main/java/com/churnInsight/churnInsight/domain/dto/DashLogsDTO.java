@@ -1,5 +1,6 @@
 package com.churnInsight.churnInsight.domain.dto;
 
+import java.time.Instant;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -11,21 +12,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DashLogsDTO {
     // Totales generales
-    private Integer totalPredicciones;           
-    private Date fechaPrimerPrediccion;          
+    private Long totalPredicciones;           
+    private Instant fechaPrimerPrediccion;          
 
     // Estadísticas de probabilidad
-    private Float probabilidadChurnPromedio;     
+    private Double probabilidadChurnPromedio;     
     private Float valorMinimoProbabilidad;       
     private Float valorMaximoProbabilidad;       
 
     // Conteo por decisión
-    private Integer totalCancelara;             
-    private Integer totalNoCancelara;            
+    private Long totalCancelara;             
+    private Long totalNoCancelara;            
     
     // Métricas de calidad y riesgo
-    private Integer totalErrorPrediccion;        
-    private Integer totalRiesgoAlto;             
-    private Integer totalRiesgoMedio;            
-    private Integer totalRiesgoBajo;            
+    private Long totalErrorPrediccion;        
+    private Long totalRiesgoAlto;             
+    private Long totalRiesgoMedio;            
+    private Long totalRiesgoBajo;  
 }
