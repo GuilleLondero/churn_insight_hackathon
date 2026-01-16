@@ -35,13 +35,21 @@ public class SecurityConfig {
         // 1. Configuración de CSRF (
         http.csrf(AbstractHttpConfigurer::disable);
 
-        // 2. Configuración de Rutas 
+        // 2. Configuración de Rutas
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //permite peticiones con headers
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() 
-                .anyRequest().authenticated()            
-        );
+        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //permite peticiones con headers
+        .requestMatchers("/auth/**").permitAll() // Login y Registro público
+        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() // Documentación
+        
+        // Solo el SUPER_ADMIN puede crear o borrar admins 
+        .requestMatchers("/super/**").hasAuthority("ROLE_SUPER_ADMIN")
+        
+        // Solo ADMIN pueden ver estadisticas 
+        .requestMatchers("/logs/**").hasAuthority("ROLE_ADMIN") 
+        
+        // Otra cuestion requiere estar autenticada
+        .anyRequest().authenticated()
+    );
 
         // 3. Gestión de Sesión 
         http.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

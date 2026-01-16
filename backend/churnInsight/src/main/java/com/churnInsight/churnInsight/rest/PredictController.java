@@ -6,13 +6,18 @@ import com.churnInsight.churnInsight.service.PredictionService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,4 +38,14 @@ public class PredictController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping(value = "/batch-predict",
+                consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<PredictResponse>> batchPrediction(@RequestParam("file") MultipartFile file) {
+        String nombreUsuario = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<PredictResponse> response = predictionService.batchPrediction(file, nombreUsuario);
+
+        return ResponseEntity.ok(response);
+    }
+    
 }

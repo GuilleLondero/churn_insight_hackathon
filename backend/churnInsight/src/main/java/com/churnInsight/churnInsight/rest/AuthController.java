@@ -56,7 +56,7 @@ public class AuthController {
         var userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsuario())
                 .password(user.getPassword())
-                .roles("USER")
+                .roles(user.getRol().name())
                 .build();
                 
         String token = jwtService.generateToken(userDetails);
