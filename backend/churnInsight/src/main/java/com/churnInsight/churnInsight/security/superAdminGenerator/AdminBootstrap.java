@@ -22,7 +22,7 @@ public class AdminBootstrap implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     @Value("${SUPER_PASSWORD}")
-    private String rawPassword;
+    private String rawPassword;//obtiene el valor por variable de entorno
 
   @Override
   public void run(String... args) {

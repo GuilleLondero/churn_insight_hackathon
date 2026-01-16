@@ -8,6 +8,7 @@ import com.churnInsight.churnInsight.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,8 @@ public class UserController {
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
 
-    // READ 
+    // READ
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UsuarioRespuestaDTO> getAllUsuarios() {
         return usuarioService.getAll().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
@@ -46,6 +48,7 @@ public class UserController {
     }
 
     // DELETE 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
         usuarioService.deleteUsuarioById(id);
