@@ -1,5 +1,6 @@
 package com.churnInsight.churnInsight.repository;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,18 @@ public interface PredictionLogRepository extends JpaRepository<PredictionLog, Lo
         WHERE (:usuario IS NULL OR p.usuario = :usuario)
     """)
     DashLogsDTO getPredictionStats(@Param("usuario") String usuario);
+
+        @Query("""
+        SELECT p
+        FROM PredictionLog p
+        WHERE p.usuario = :usuario
+          AND p.timestamp >= :fechaDesde
+          AND p.timestamp <= COALESCE(:fechaHasta, p.timestamp)
+        ORDER BY p.timestamp DESC
+    """)
+    List<PredictionLog> findByUsuarioAndFechaRango(
+            @Param("usuario") String usuario,
+            @Param("fechaDesde") Instant fechaDesde,
+            @Param("fechaHasta") Instant fechaHasta
+    );
 }
