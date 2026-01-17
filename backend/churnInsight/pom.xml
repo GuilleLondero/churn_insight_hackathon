@@ -8,10 +8,10 @@
 		<version>3.5.9</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.churnInsight</groupId>
-	<artifactId>churnInsight</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>churnInsight</name>
+	<groupId>com.churninsight</groupId>
+	<artifactId>churninsight</artifactId>
+	<version>0.0.1</version>
+	<name>churninsight</name>
 	<description>Proyecto Churn Insight</description>
 	<url/>
 	<licenses>

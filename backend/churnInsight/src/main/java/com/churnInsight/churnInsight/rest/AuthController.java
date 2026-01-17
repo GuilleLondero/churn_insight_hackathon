@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://127.0.0.1:5500/")
+@CrossOrigin(origins = {"http://127.0.0.1:5500/", "https://churninsight.netlify.app/"})
 public class AuthController {
 
     private final UsuarioService usuarioService;
@@ -56,7 +56,7 @@ public class AuthController {
         var userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsuario())
                 .password(user.getPassword())
-                .roles("USER")
+                .roles(user.getRol().name())
                 .build();
                 
         String token = jwtService.generateToken(userDetails);

@@ -45,7 +45,12 @@ public class SecurityConfig {
         .requestMatchers("/super/**").hasAuthority("ROLE_SUPER_ADMIN")
         
         // Solo ADMIN pueden ver estadisticas 
-        .requestMatchers("/logs/**").hasAuthority("ROLE_ADMIN") 
+        .requestMatchers("/logs/user/{usuario}").hasAnyAuthority("ROLE_USUARIO","ROLE_ADMIN") //Las individuales si puede ver el rol USUARIO
+        .requestMatchers("/logs/**").hasAuthority("ROLE_ADMIN")
+        .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").hasAuthority("ROLE_ADMIN")//con estas dos lineas se aisla
+        .requestMatchers(HttpMethod.GET,"/usuarios").hasAuthority("ROLE_ADMIN")       //la autenticacion de endpoints
+                                                                                      //para rol admin, de no ser asi, un usuario comun
+                                                                                      //no podria actualizar su informacion basica.
         
         // Otra cuestion requiere estar autenticada
         .anyRequest().authenticated()

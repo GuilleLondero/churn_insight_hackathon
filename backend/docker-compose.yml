@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: churninsight
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: matiroot
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  churninsight-app:
+    build: churnInsight
+    container_name: churninsight-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      DB_NAME: churninsight
+      DATABASE_URL: postgresql://postgres:5432/churninsight
+      DB_PORT: 5432
+      DB_USNAME: postgres
+      DB_PS: matiroot
+      SPRING_PROFILES_ACTIVE: docker
+    restart: always
+
+volumes:
+  postgres_data:

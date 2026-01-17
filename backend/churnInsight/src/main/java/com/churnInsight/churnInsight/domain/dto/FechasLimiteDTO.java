@@ -1,0 +1,19 @@
+package com.churnInsight.churnInsight.domain.dto;
+
+import java.time.Instant;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class FechasLimiteDTO {
+
+    @NotNull(message = "La fecha desde es obligatoria")
+    private Instant fechaDesde;
+    private Instant fechaHasta;
+
+}

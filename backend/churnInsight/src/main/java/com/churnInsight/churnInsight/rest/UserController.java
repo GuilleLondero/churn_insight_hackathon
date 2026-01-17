@@ -16,13 +16,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://127.0.0.1:5500/")
+@CrossOrigin(origins = {"http://127.0.0.1:5500/", "https://churninsight.netlify.app/"})
 public class UserController {
 
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
 
-    // READ 
+    // READ
     @GetMapping
     public List<UsuarioRespuestaDTO> getAllUsuarios() {
         return usuarioService.getAll().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
