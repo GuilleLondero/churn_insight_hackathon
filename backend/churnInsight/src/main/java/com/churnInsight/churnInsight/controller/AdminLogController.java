@@ -57,7 +57,7 @@ public class AdminLogController {
         return ResponseEntity.ok(logs);
     }
     
-    @GetMapping("/filter/fecha/{usuario}")
+    @PostMapping("/filter/fecha/{usuario}")
     public ResponseEntity<?> obtenerLogUsuarioDesde(@PathVariable String usuario, @RequestBody @Valid FechasLimiteDTO fechas){
         List<PredictionLog> logs = dashboardService.obtenerLogsUsuarioYFecha(usuario, fechas.getFechaDesde(), fechas.getFechaHasta());
         return ResponseEntity.ok(logs);
