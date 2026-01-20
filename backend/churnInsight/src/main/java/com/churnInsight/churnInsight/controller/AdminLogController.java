@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,13 @@ public class AdminLogController {
     public ResponseEntity<DashLogsDTO> obtenerLogsGlobales() {
         // Llamamos al servicio con null 
         DashLogsDTO stats = dashboardService.obtenerEstadisticas(null);
+        return ResponseEntity.ok(stats);
+    }
+    
+    @PostMapping
+    public ResponseEntity<List<PredictionLog>> obtenerLogsGlobalesFechas(@RequestBody @Valid FechasLimiteDTO fechas) {
+        // Llamamos al servicio con null 
+        List<PredictionLog> stats = dashboardService.obtenerLogsFechas(fechas.getFechaDesde(), fechas.getFechaHasta());
         return ResponseEntity.ok(stats);
     }
 
