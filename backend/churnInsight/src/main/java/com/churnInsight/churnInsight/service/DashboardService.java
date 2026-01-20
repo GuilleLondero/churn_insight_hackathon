@@ -19,6 +19,10 @@ public class DashboardService {
         return repository.getPredictionStats(usuario);
     }
 
+    public List<PredictionLog> obtenerLogsFechas(Instant desde, Instant hasta){
+        return repository.findFechaRango(desde,hasta);
+    }
+
     public List<PredictionLog> obtenerLogsUsuario(String usuario){
         return repository.findByUsuario(usuario);
     }
