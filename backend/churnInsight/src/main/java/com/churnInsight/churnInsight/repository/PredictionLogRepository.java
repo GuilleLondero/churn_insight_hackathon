@@ -21,8 +21,8 @@ public interface PredictionLogRepository extends JpaRepository<PredictionLog, Lo
         SELECT new com.churnInsight.churnInsight.domain.dto.DashLogsDTO(
             COUNT(p),
             MIN(p.timestamp),
-            AVG(p.probabilidadChurn),
-            MIN(p.probabilidadChurn),
+            AVG(CASE WHEN p.status = 'OK' THEN p.probabilidadChurn ELSE NULL END),
+            MIN(CASE WHEN p.status = 'OK' THEN p.probabilidadChurn ELSE NULL END),
             MAX(p.probabilidadChurn),
 
             SUM(CASE WHEN p.prediccion = 'cancelara' THEN 1 ELSE 0 END),
@@ -48,6 +48,18 @@ public interface PredictionLogRepository extends JpaRepository<PredictionLog, Lo
     """)
     List<PredictionLog> findByUsuarioAndFechaRango(
             @Param("usuario") String usuario,
+            @Param("fechaDesde") Instant fechaDesde,
+            @Param("fechaHasta") Instant fechaHasta
+    );
+
+    @Query("""
+        SELECT p
+        FROM PredictionLog p
+          WHERE p.timestamp >= :fechaDesde
+          AND p.timestamp <= COALESCE(:fechaHasta, p.timestamp)
+        ORDER BY p.timestamp DESC
+    """)
+        List<PredictionLog> findFechaRango(
             @Param("fechaDesde") Instant fechaDesde,
             @Param("fechaHasta") Instant fechaHasta
     );
