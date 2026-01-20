@@ -51,4 +51,16 @@ public interface PredictionLogRepository extends JpaRepository<PredictionLog, Lo
             @Param("fechaDesde") Instant fechaDesde,
             @Param("fechaHasta") Instant fechaHasta
     );
+
+    @Query("""
+        SELECT p
+        FROM PredictionLog p
+          WHERE p.timestamp >= :fechaDesde
+          AND p.timestamp <= COALESCE(:fechaHasta, p.timestamp)
+        ORDER BY p.timestamp DESC
+    """)
+        List<PredictionLog> findFechaRango(
+            @Param("fechaDesde") Instant fechaDesde,
+            @Param("fechaHasta") Instant fechaHasta
+    );
 }
