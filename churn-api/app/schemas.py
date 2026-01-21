@@ -19,7 +19,7 @@ class PredictionRequest(BaseModel):
     tickets_soporte: int = Field(..., ge=0, description="Cantidad de tickets de soporte")
     tipo_contrato: Literal["mensual", "anual"] = Field(..., description="Tipo de contrato")
     cambios_plan: int = Field(..., ge=0, description="Cantidad de cambios de plan")
-    canal_adquisicion: Literal["web", "referido", "publicidad"] = Field(
+    canal_adquisicion: Literal["web", "referido", "redes_sociales", "call_center"] = Field(
         ..., description="Canal de adquisicion del cliente"
     )
     
@@ -34,7 +34,7 @@ class PredictionRequest(BaseModel):
                 "tickets_soporte": 3,
                 "tipo_contrato": "mensual",
                 "cambios_plan": 0,
-                "canal_adquisicion": "web"
+                "canal_adquisicion": "redes_sociales"
             }
         }
 

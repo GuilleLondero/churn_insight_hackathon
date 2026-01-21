@@ -94,10 +94,22 @@ def get_top_features(
         
         elif 'canal_adquisicion' in feature_lower:
             canal = input_data.get('canal_adquisicion', '')
-            if 'referido' in feature_lower or canal == 'referido':
+            
+            # Clientes referidos y web tienen mayor lealtad
+            if canal == 'referido' or 'referido' in feature_lower:
                 return "bajo_riesgo"
-            elif 'publicidad' in feature_lower or canal == 'publicidad':
+            elif canal == 'web' or 'web' in feature_lower:
+                return "bajo_riesgo"
+            
+            # Redes sociales tiende a mayor rotación
+            elif canal == 'redes_sociales' or 'redes_sociales' in feature_lower:
                 return "alto_riesgo"
+            
+            # Call center es neutral
+            elif canal == 'call_center' or 'call_center' in feature_lower:
+                return "medio_riesgo"
+            
+            # Fallback: valor desconocido (no debería ocurrir, pero por si acaso)
             return "medio_riesgo"
         
         elif any(x in feature_lower for x in ['friccion', 'cliente_problematico', 'early_churn', 'premium_mensual']):
