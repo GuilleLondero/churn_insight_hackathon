@@ -62,8 +62,8 @@ public class PredictRequest {
     private Integer cambiosPlan;
 
     @NotBlank
-    @Pattern(regexp = "web|referido|redes_sociales",
-             message ="Canales de adquisicion validos : web, referido, redes_sociales")
+    @Pattern(regexp = "web|referido|redes_sociales|call_center",
+             message ="Canales de adquisicion validos : web, referido, redes_sociales o call_center")
     private String canalAdquisicion;
 
 }

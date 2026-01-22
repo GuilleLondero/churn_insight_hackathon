@@ -25,6 +25,10 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    public List<Usuario> getAllSinAdm(){
+        return usuarioRepository.getAllSinAdmins();
+    }
+
     public Usuario getUsuarioById(Long id){
         return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }

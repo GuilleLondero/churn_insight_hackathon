@@ -25,7 +25,7 @@ public class UserController {
     // READ
     @GetMapping
     public List<UsuarioRespuestaDTO> getAllUsuarios() {
-        return usuarioService.getAll().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
+        return usuarioService.getAllSinAdm().stream().map(u -> new UsuarioRespuestaDTO(u)).toList(); // Se pasa de clase usuario
                                                                                                //a usuario de respuesta (no muestra la contraseña)
     }
 
