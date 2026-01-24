@@ -31,10 +31,15 @@ public class UserController {
     // UPDATE 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) throws UsuarioNoEncontradoException {
+        Usuario usuario = null;
         try{
-            Usuario usuario = usuarioService.getUsuarioById(id);
-            usuario.setUsuario(usuarioDetalles.getUsuario());
-            usuario.setEmail(usuarioDetalles.getEmail());
+            usuario = usuarioService.getUsuarioById(id);
+        }catch (RuntimeException ex){
+            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
+        }
+
+        usuario.setUsuario(usuarioDetalles.getUsuario());
+        usuario.setEmail(usuarioDetalles.getEmail());
         // Se encripta la nueva contraseña
         if(usuarioDetalles.getPassword() != null && !usuarioDetalles.getPassword().isEmpty()){
             usuario.setPassword(passwordEncoder.encode(usuarioDetalles.getPassword()));
@@ -42,9 +47,6 @@ public class UserController {
         usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.ok("Usuario actualizado");
         
-        }catch (RuntimeException ex){
-            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
-        }
     }
 
     // DELETE 
