@@ -3,6 +3,7 @@ package com.churnInsight.churnInsight.rest;
 import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
 import com.churnInsight.churnInsight.domain.dto.UsuarioRespuestaDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
+import com.churnInsight.churnInsight.exception.UsuarioNoEncontradoException;
 import com.churnInsight.churnInsight.service.UsuarioService;
 
 import jakarta.validation.Valid;

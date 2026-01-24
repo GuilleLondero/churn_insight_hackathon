@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.churnInsight.churnInsight.exception.ApiError.ApiFieldError;
-import com.churnInsight.churnInsight.rest.UsuarioNoEncontradoException;
 
 import jakarta.validation.ConstraintViolationException;
 
