@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.churnInsight.churnInsight.exception.ApiError.ApiFieldError;
+import com.churnInsight.churnInsight.rest.UsuarioNoEncontradoException;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -69,7 +71,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiError> handleDs(BadCredentialsException ex) {
+    public ResponseEntity<ApiError> handleCredentials(BadCredentialsException ex) {
 
         ApiError body = new ApiError(
                 "Error de autenticacion",
@@ -90,5 +92,27 @@ public class GlobalExceptionHandler {
                 Instant.now()
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ApiError> handleAtriburosErroneos(ObjectOptimisticLockingFailureException ex){
+        ApiError body = new ApiError(
+                "Error de parametros",
+                List.of(new ApiError.ApiFieldError("El json no cumple los requisitos", """
+                        Json esperado: usuario : String, password: String, email : String
+                        """)),
+                Instant.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(UsuarioNoEncontradoException.class)
+    public ResponseEntity<ApiError> handleUsuarioNoEncontrado(UsuarioNoEncontradoException ex){
+        ApiError body = new ApiError(
+                "Usuario no encontrado",
+                List.of(new ApiError.ApiFieldError("Error al encontrar el usuario indicado", ex.getMessage())),
+                Instant.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 }
