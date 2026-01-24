@@ -30,24 +30,33 @@ public class UserController {
 
     // UPDATE 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) {
-        Usuario usuario = usuarioService.getUsuarioById(id);
-
-        usuario.setUsuario(usuarioDetalles.getUsuario());
-        usuario.setEmail(usuarioDetalles.getEmail());
+    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) throws UsuarioNoEncontradoException {
+        try{
+            Usuario usuario = usuarioService.getUsuarioById(id);
+            usuario.setUsuario(usuarioDetalles.getUsuario());
+            usuario.setEmail(usuarioDetalles.getEmail());
         // Se encripta la nueva contraseña
         if(usuarioDetalles.getPassword() != null && !usuarioDetalles.getPassword().isEmpty()){
             usuario.setPassword(passwordEncoder.encode(usuarioDetalles.getPassword()));
         }
-
         usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.ok("Usuario actualizado");
+        
+        }catch (RuntimeException ex){
+            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
+        }
     }
 
     // DELETE 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
-        usuarioService.deleteUsuarioById(id);
-        return ResponseEntity.ok("Usuario eliminado");
+    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) throws UsuarioNoEncontradoException {
+        try{
+            usuarioService.getUsuarioById(id);
+            usuarioService.deleteUsuarioById(id);
+            return ResponseEntity.ok("Usuario eliminado");
+        }catch (RuntimeException ex){
+            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
+        }
+
     }
 }
