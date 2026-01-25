@@ -43,7 +43,7 @@ public class SwaggerConfig {
                                 .url("http://localhost:8080")
                                 .description("Servidor Local - Desarrollo"),
                         new Server()
-                                .url("https://api-churninsight.ejemplo.com")
+                                .url("https://backend-churninsight-app-1.onrender.com")
                                 .description("Servidor de Producción")
                 ))
                 // 🔐 Aplica seguridad JWT a toda la API en Swagger

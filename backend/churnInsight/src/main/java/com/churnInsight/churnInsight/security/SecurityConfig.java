@@ -98,7 +98,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000", "http://127.0.0.1:5500/", "https://churninsight.netlify.app/","/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"));
+        config.setAllowedOrigins(List.of("*.onrender.com", "*.netlify.app", "http://localhost:3000", "http://127.0.0.1:5500/", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
