@@ -1,4 +1,4 @@
-package com.churnInsight.churnInsight.rest;
+package com.churnInsight.churnInsight.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

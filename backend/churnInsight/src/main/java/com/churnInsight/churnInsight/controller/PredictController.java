@@ -1,4 +1,4 @@
-package com.churnInsight.churnInsight.rest;
+package com.churnInsight.churnInsight.controller;
 
 import com.churnInsight.churnInsight.domain.dto.PredictRequest;
 import com.churnInsight.churnInsight.domain.dto.PredictResponse;
