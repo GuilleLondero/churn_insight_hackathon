@@ -45,6 +45,7 @@ public class SecurityConfig {
         // 2. Configuración de Rutas
         http.authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //permite peticiones con headers
+        .requestMatchers("/").permitAll()
         .requestMatchers("/health").permitAll()
         .requestMatchers("/auth/**").permitAll() // Login y Registro público
         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll() // Documentación
