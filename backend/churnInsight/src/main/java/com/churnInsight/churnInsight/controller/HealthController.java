@@ -1,4 +1,4 @@
-package com.churnInsight.churnInsight.rest;
+package com.churnInsight.churnInsight.controller;
 
 import java.time.Instant;
 import java.util.Map;
