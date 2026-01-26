@@ -24,6 +24,9 @@
 - [Documentación por Componente](#-documentación-por-componente)
 - [Equipo](#-equipo)
 - [Resultados y Métricas](#-resultados-y-métricas)
+- [Testing](#-testing)
+- [Deployment](#-deployment)
+- [Documentación adicional](#-documentación-adicional)
 
 ---
 
@@ -500,7 +503,7 @@ Cada componente tiene su propia documentación detallada:
 
 ### Backend
 ```bash
-cd backend
+cd backend/churnInsight
 ./mvnw test
 ```
 
@@ -522,7 +525,8 @@ El proyecto está desplegado en producción usando:
 - **Netlify** (Frontend)
 - **PostgreSQL** (Base de datos en Render)
 
-**Ver**: [Guías detalladas de instalación](#-documentación-por-componente)
+**Ver:** [Guías detalladas de instalación](#-documentación-por-componente)
+**Ver:** [Instalación Rápida](#-instalación-rápida)
 
 ---
 
