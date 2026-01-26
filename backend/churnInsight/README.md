@@ -29,7 +29,7 @@ El backend actúa como el **núcleo del sistema**, conectando Frontend, modelo M
 - OpenCSV  
 
 ### Arquitectura de Integración
-```txt
+
 Frontend (JWT)
       ↓
 Backend Spring Boot
