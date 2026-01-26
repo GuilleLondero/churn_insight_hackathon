@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -33,6 +34,7 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     
@@ -42,6 +44,14 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.cors(Customizer.withDefaults());
+        
+        http.exceptionHandling(ex -> ex
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .accessDeniedHandler((req, res, e) -> {
+                res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                res.getWriter().write("Forbidden: permisos insuficientes");
+            }));
+
         // 2. Configuración de Rutas
         http.authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() //permite peticiones con headers
