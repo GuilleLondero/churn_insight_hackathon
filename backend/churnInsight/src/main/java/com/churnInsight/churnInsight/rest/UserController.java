@@ -3,6 +3,7 @@ package com.churnInsight.churnInsight.rest;
 import com.churnInsight.churnInsight.domain.dto.UsuarioDTO;
 import com.churnInsight.churnInsight.domain.dto.UsuarioRespuestaDTO;
 import com.churnInsight.churnInsight.entity.Usuario;
+import com.churnInsight.churnInsight.exception.UsuarioNoEncontradoException;
 import com.churnInsight.churnInsight.service.UsuarioService;
 
 import jakarta.validation.Valid;
@@ -16,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/usuarios")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://127.0.0.1:5500/", "https://churninsight.netlify.app/"})
 public class UserController {
 
     private final UsuarioService usuarioService;
@@ -31,8 +31,13 @@ public class UserController {
 
     // UPDATE 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) {
-        Usuario usuario = usuarioService.getUsuarioById(id);
+    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody @Valid UsuarioDTO usuarioDetalles) throws UsuarioNoEncontradoException {
+        Usuario usuario = null;
+        try{
+            usuario = usuarioService.getUsuarioById(id);
+        }catch (RuntimeException ex){
+            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
+        }
 
         usuario.setUsuario(usuarioDetalles.getUsuario());
         usuario.setEmail(usuarioDetalles.getEmail());
@@ -40,15 +45,21 @@ public class UserController {
         if(usuarioDetalles.getPassword() != null && !usuarioDetalles.getPassword().isEmpty()){
             usuario.setPassword(passwordEncoder.encode(usuarioDetalles.getPassword()));
         }
-
         usuarioService.actualizarUsuario(usuario);
         return ResponseEntity.ok("Usuario actualizado");
+        
     }
 
     // DELETE 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
-        usuarioService.deleteUsuarioById(id);
-        return ResponseEntity.ok("Usuario eliminado");
+    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) throws UsuarioNoEncontradoException {
+        try{
+            usuarioService.getUsuarioById(id);
+            usuarioService.deleteUsuarioById(id);
+            return ResponseEntity.ok("Usuario eliminado");
+        }catch (RuntimeException ex){
+            throw new UsuarioNoEncontradoException("No se encontro el usuario indicado!");
+        }
+
     }
 }

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UsuarioDTO {
 
-    private Long id;
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]{4,8}$", message = "El usuario debe tener entre 4 y 8 caracteres alfanumericos!")
     private String usuario;

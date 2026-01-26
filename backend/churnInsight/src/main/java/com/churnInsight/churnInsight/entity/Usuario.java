@@ -43,7 +43,6 @@ public class Usuario {
 
 
     public Usuario(UsuarioDTO user){
-        this.id = user.getId();
         this.usuario = user.getUsuario();
         this.email = user.getEmail();
         this.password = user.getPassword();
