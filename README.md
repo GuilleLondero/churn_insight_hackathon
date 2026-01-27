@@ -26,7 +26,9 @@
 - [Resultados y Métricas](#-resultados-y-métricas)
 - [Testing](#-testing)
 - [Deployment](#-deployment)
+- [Estructura del proyecto](#-estructura-del-proyecto)
 - [Documentación adicional](#-documentación-adicional)
+
 
 ---
 
@@ -249,19 +251,15 @@ Usuario → Frontend → Backend → FastAPI → Modelo ML
 #### Backend
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/GuilleLondero/churn_insight_hackathon.git
-cd churn_insight_hackathon
+git clone https://github.com/GuilleLondero/churn_insight_hackathon/tree/main
 
-# 2. Cambiar a la rama de backend
-git checkout matias
-
-# 3. Navegar a la carpeta con docker-compose
+# 2. Navegar a la carpeta con docker-compose
 cd backend/churnInsight
 
-# 4. Levantar los servicios
+# 3. Levantar los servicios
 docker-compose up -d
 
-# 5. Verificar que esté corriendo
+# 4. Verificar que esté corriendo
 docker-compose ps
 
 # Acceder al Backend:
@@ -273,18 +271,12 @@ docker-compose ps
 
 ```bash
 # 1. Desde la raíz del proyecto
-cd churn_insight_hackathon
-
-# 2. Cambiar a la rama de data science
-git checkout ds_guille
-
-# 3. Navegar a la carpeta de FastAPI
 cd churn-api
 
-# 4. Construir la imagen Docker
+# 2. Construir la imagen Docker
 docker build -t churninsight-ml .
 
-# 5. Ejecutar el contenedor
+# 3. Ejecutar el contenedor
 docker run -d -p 8000:8000 --name churninsight-fastapi churninsight-ml
 
 # Acceder a FastAPI:
@@ -299,13 +291,10 @@ docker run -d -p 8000:8000 --name churninsight-fastapi churninsight-ml
 git clone https://github.com/lmbaezp/ChurnInsightFront.git
 cd ChurnInsightFront
 
-# 2. Asegurarse de estar en main
-git checkout main
-
-# 3. Configurar la URL del backend (archivo src/js/api.js)
+# 2. Configurar la URL del backend (archivo src/js/api.js)
 # Cambiar API_URL si es necesario
 
-# 4. Abrir con servidor local (elige uno):
+# 3. Abrir con servidor local (elige uno):
 
 # Opción A: Python
 python -m http.server 3000
@@ -327,13 +316,11 @@ npx http-server -p 3000
 
 ```bash
 # 1. Clonar y navegar
-git clone https://github.com/GuilleLondero/churn_insight_hackathon.git
-cd churn_insight_hackathon
-git checkout matias
+git clone https://github.com/GuilleLondero/churn_insight_hackathon/tree/main
 cd backend/churnInsight
 
 # 2. Configurar PostgreSQL
-# Editar src/main/resources/application.yml con tus credenciales de BD
+# Editar src/main/resources/application.properties con tus credenciales de BD
 
 # 3. Ejecutar
 ./mvnw spring-boot:run
@@ -363,10 +350,8 @@ spring:
 
 ```bash
 # 1. Clonar y navegar
-git clone https://github.com/GuilleLondero/churn_insight_hackathon.git
-cd churn_insight_hackathon
-git checkout ds_guille
-cd churn-api
+git clone https://github.com/GuilleLondero/churn_insight_hackathon/tree/main
+cd data_science/churn-api
 
 # 2. Crear entorno virtual (recomendado)
 python -m venv venv
@@ -427,14 +412,14 @@ python -m http.server 3000
 
 Cada componente tiene su propia documentación detallada:
 
-### 📘 [Backend - README](https://github.com/GuilleLondero/churn_insight_hackathon/blob/meiby/backend/churnInsight/README.md)
+### 📘 [Backend - README](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/backend/README.md)
 - Instalación y configuración
 - Endpoints de API
 - Autenticación JWT
 - Base de datos y migraciones
 - Testing
 
-### 📗 [Data Science - README](https://github.com/GuilleLondero/churn_insight_hackathon/tree/ds_guille)
+### 📗 [Data Science - README](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/READMEds.md)
 - Modelo de Machine Learning
 - Endpoints del microservicio
 - Feature engineering
@@ -503,13 +488,13 @@ Cada componente tiene su propia documentación detallada:
 
 ### Backend
 ```bash
-cd backend/churnInsight
+cd backend/churnInsight/src
 ./mvnw test
 ```
 
 ### Data Science
 ```bash
-cd data_science/churn-api
+cd churn-api
 pytest tests/ -v
 ```
 
@@ -525,20 +510,80 @@ El proyecto está desplegado en producción usando:
 - **Netlify** (Frontend)
 - **PostgreSQL** (Base de datos en Render)
 
-**Ver:** [Guías detalladas de instalación](#-documentación-por-componente)
-**Ver:** [Instalación Rápida](#-instalación-rápida)
+**Ver**: [Guías detalladas de instalación](#-documentación-por-componente)
 
+---
+
+## Estructura del proyecto
+
+```
+churn_insight_hackaton/
+├── backend/                     # Componente backend
+│   ├── .vscode/
+│   ├── churnInsight/            # Código fuente en Java para despliegue
+|   │   ├── src/
+|   |   │   ├── main/
+|   |   |   │   ├── java/com/churnInsight/churnInsight     
+|   |   |   │   ├── resources/
+|   |   │   └── test/            # Carpeta de pruebas para testing
+|   │   ├── Dockerfile
+|   │   ├── mvnw
+|   │   └── pom.xml
+|   ├── .DS_Store
+|   ├── .README.md               # README del componente backend
+|   └── docker-compose.yml
+│
+├── churn-api/                   # Código para el despliegue en FastApi del modelo
+│   ├── app/
+│   │   ├── __init__.py          # Convierte app/ en módulo Python
+│   │   ├── main.py              # Servidor FastAPI + endpoints
+│   │   ├── schemas.py           # Modelos Pydantic de validación
+│   │   └── utils.py             # Cálculo de feature importance
+│   ├── models/
+│   |   ├── churn_xgboost_calibrado.pkl  # Modelo serializado (1.2 MB)
+│   ├── tests/
+│   |   ├── __init__.py
+│   |   └── test_api.py          # Tests automatizados (9 tests)
+|   ├── .dockerignore
+|   ├── .gitignore
+|   ├── Dockerfile
+|   ├── README.md 
+|   └── requeriments.txt
+│
+├── datascience
+│   ├── datasets/               # Conjunto de datos para análisis
+│   │   ├── dataset_feature_enginnering_final.csv
+│   │   ├── dataset_limpio_final.csv
+│   │   └── dataset_sucio_final.csv
+│   ├── models/
+│   |   └── churn_xgboost_calibrado.pkl  # Modelo serializado (1.2 MB)
+|   ├── notebooks/                   # Notebooks de desarrollo (no en producción)
+|   │   ├── Análisis_exploratorio.ipynb
+|   │   ├── CONTRATO_INTEGRACIÓN_DS_BACKEND.ipynb
+|   │   ├── Eda_dataset_final.ipynb
+|   │   ├── Feature_Enginnering_final.ipynb
+|   │   ├── Generacion_dataset_final.ipynb
+|   │   ├── one_hot_encoding_&_modelado.ipynb
+|   │   ├── optimizacion_modelos.ipynb
+|   |   └── pipeline_serialization.ipynb
+│   └──   READMEds.md
+├── .DS_Store
+├── .gitignore
+└── README.md                         # README de todo el repositorio
+```
 ---
 
 ## 📖 Documentación Adicional
 
 - 📄 [Contrato de Integración Backend-DS](https://colab.research.google.com/drive/1je4ywQeHviSiTlVx1kxqpkHQeg1jgTDl)
-- 📓 [Notebooks de Desarrollo Modelo ML](https://github.com/GuilleLondero/churn_insight_hackathon/tree/ds_guille/data_science/notebooks)
-  - [Generación de datos](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Generacion_dataset_final.ipynb).
-  - [EDA](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Eda_dataset_final.ipynb)
-  - [Feature engineering](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Feature_Enginnering_final.ipynb)
-  - [One hot encoding y modelado](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/one_hot_encoding_%26_modelado.ipynb)
-  - [Serialización del pipeline](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/pipeline_serialization.ipynb)
+- 📓 [Notebooks de Desarrollo Modelo ML](https://github.com/GuilleLondero/churn_insight_hackathon/tree/main/data_science/notebooks)
+  - [Generación de datos](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Generacion_dataset_final.ipynb).
+  - [Análisis exploratorio:](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Analisis_exploratorio.ipynb)
+  - [Limpieza dataset](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Eda_dataset_final.ipynb)
+  - [Feature engineering](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Feature_Enginnering_final.ipynb)
+  - [One hot encoding y modelado](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/one_hot_encoding_%26_modelado.ipynb)
+  - [Optimización de modelos:](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/optimizacion_modelos.ipynb)
+  - [Serialización del pipeline](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/pipeline_serialization.ipynb)
 
 ---
 
@@ -559,8 +604,7 @@ Si deseas contribuir o reportar un bug:
 
 - **Team Lead General**: Guillermo Londero - guillelondero@gmail.com
 - **Team Lead Backend**: Matias Solanes - matias.solanes14@gmail.com
-- **Repositorio backend**: [GitHub - ChurnInsight BE](https://github.com/GuilleLondero/churn_insight_hackathon/tree/matias)
-- **Repositorio datascience**: [GitHub - ChurnInsight DS](https://github.com/GuilleLondero/churn_insight_hackathon/tree/ds_guille)
+- **Repositorio backend - ML**: [GitHub - ChurnInsight BE](https://github.com/GuilleLondero/churn_insight_hackathon)
 - **Repositorio frontend**: [GitHub - ChurnInsight FE](https://github.com/lmbaezp/ChurnInsightFront)
 
 ---
@@ -590,4 +634,3 @@ Desarrollado como parte del **Hackathon ONE – No Country 2025** por el **Equip
   <br>
   Desarrollado con ❤️ por el Equipo 43
 </p>
-
