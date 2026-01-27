@@ -95,8 +95,8 @@ En la revisión de la literatura, el fenómeno del churn no es un tema nuevo de 
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/GuilleLondero/churn_insight_hackathon/tree/ds_guille/churn_api
-cd app
+git clone https://github.com/GuilleLondero/churn_insight_hackathon/tree/main
+cd churn-api
 
 # 2. Crear entorno virtual (recomendado)
 python -m venv venv
@@ -215,19 +215,19 @@ print(response.json())
     {
       "feature": "antiguedad",
       "valor_cliente": 36,
-      "impacto": "bajo_riesgo",
+      "impacto": "reduce riesgo",
       "importancia": 0.145
     },
     {
       "feature": "tipo_contrato_mensual",
       "valor_cliente": 0,
-      "impacto": "bajo_riesgo",
+      "impacto": "reduce riesgo",
       "importancia": 0.133
     },
     {
       "feature": "facturas_impagas",
       "valor_cliente": 0,
-      "impacto": "bajo_riesgo",
+      "impacto": "reduce riesgo",
       "importancia": 0.131
     }
   ],
@@ -332,7 +332,7 @@ POST /predict
     {
       "feature": "nombre_variable",
       "valor_cliente": valor,
-      "impacto": "alto_riesgo" | "medio_riesgo" | "bajo_riesgo",
+      "impacto": "aumenta riesgo" | "reduce riesgo",
       "importancia": 0.0-1.0
     }
   ],
@@ -370,20 +370,23 @@ Predicción + Probabilidad Calibrada
 
 Este modelo fue desarrollado siguiendo un proceso riguroso de Data Science:
 
-1. **Generación de Dataset**: 5,000 registros sintéticos con lógica de negocio realista
-2. **Limpieza de Datos**: Tratamiento de nulos (10%), outliers (5%) y ruido (2%)
-3. **Feature Engineering**: Creación de 5 features validadas (VIF < 5.4)
-4. **Modelado**: Evaluación de 3 algoritmos (LR, RF, XGBoost)
-5. **Calibración**: Platt Scaling para probabilidades confiables
-6. **Optimización**: Umbral ajustado para Recall 80%
+1. **Generación de Dataset:** 5,000 registros sintéticos con lógica de negocio realista.
+2. **Análisis exploratorio:** El análisis de correlación mostró que el número de `facturas_impagas` es lo que más influye de forma positiva en dejar el servicio, mientras que la variable generada `engagement_score` es la que más influye de forma inversa. Por tanto el churn no tiene una sola variable determinística sino una combinación de ellas lo explican.
+3. **Limpieza de Datos:** Tratamiento de nulos (10%), outliers (5%) y ruido (2%).
+4. **Feature Engineering:** Creación de 5 features validadas (VIF < 5.4).
+5. **Modelado:** Evaluación de 3 algoritmos (LR, RF, XGBoost).
+6. **Calibración:** Platt Scaling para probabilidades confiables e interpretables.
+7. **Optimización:** Umbral ajustado para Recall 80%, siendo la métrica más importante.
 
-**Para detalles técnicos completos**, consulta los siguientes notebooks:
+**Para detalles técnicos completos**, consulta los siguientes notebooks (en datascience/notebooks):
 - Ver [**Contrato de integración DS-Backend**](https://colab.research.google.com/drive/1je4ywQeHviSiTlVx1kxqpkHQeg1jgTDl)
-- Ver [**Generación de datos**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Generacion_dataset_final.ipynb).
-- Ver [**EDA**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Eda_dataset_final.ipynb)
-- Ver [**Feature engineering**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/Feature_Enginnering_final.ipynb)
-- Ver [**One hot encoding y modelado**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/one_hot_encoding_%26_modelado.ipynb)
-- Ver [**Serialización del pipeline**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/ds_guille/data_science/notebooks/pipeline_serialization.ipynb)
+- Ver [**Generación de datos**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Generacion_dataset_final.ipynb).
+- Ver [**Análisis exploratorio:**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Analisis_exploratorio.ipynb)
+- Ver [**Limpieza dataset**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Eda_dataset_final.ipynb)
+- Ver [**Feature engineering**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/Feature_Enginnering_final.ipynb)
+- Ver [**One hot encoding y modelado**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/one_hot_encoding_%26_modelado.ipynb)
+- Ver [**Optimización de modelos:**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/optimizacion_modelos.ipynb)
+- Ver [**Serialización del pipeline**](https://github.com/GuilleLondero/churn_insight_hackathon/blob/main/data_science/notebooks/pipeline_serialization.ipynb)
 
 **Hallazgo destacado**: Durante la evaluación, se detectó una casualidad estadística única con SMOTE (probabilidad < 0.01%)
 
@@ -435,9 +438,9 @@ Este modelo fue desarrollado siguiendo un proceso riguroso de Data Science:
 
 ### Dataset
 
-- **Total de registros**: 4,251
+- **Total de registros**: 5,000
 - **Distribución de clases**: 74% No Churn / 26% Churn
-- **Split**: 80% Train / 20% Test
+- **Split**: 80% Train (3,400) / 20% Test (851)
 - **Estrategia de balanceo**: `class_weight='balanced'` (sin SMOTE)
 
 ### Justificación de la elección de XGBOOST
@@ -446,9 +449,9 @@ Durante el desarrollo se evaluaron 3 modelos:
   
   | Modelo | Precisión | Recall | F1-Score | ROC-AUC |
   |--------|-----------|--------|----------|---------|
-  | **Logistic Regression** | 43.48% | 69.44% | 53.48% | 77.87% |
-  | **Random Forest** | 41.89% | 61.57% | 50.32% | 76.45% |
-  | **XGBoost calibrado** | 39.50% | **80.09%** | 52.91% | 76.88% |
+  | **Logistic Regression** | 43,48% | 69,44% | 53,48% | 77,87% |
+  | **Random Forest** | 41,89% | 61,57% | 50,32% | 76,45% |
+  | **XGBoost calibrado** | 39,50% | **80,09%** | 52,91% | 76,88% |
 
 Se eligió **XGBoost calibrado** porque:
 
@@ -561,12 +564,54 @@ No se requieren variables de entorno para este microservicio (el modelo está em
 
 ---
 
-## ESTRUCTURA DEL PROYECTO
-
-> **Nota:** el código de Data Science se encuentra en la rama `ds_guille`
+## Estructura del proyecto
 
 ```
-churn-insight-hackaton/
+churn_insight_hackaton/
+├── backend/                     # Componente backend
+│
+├── churn-api/                   # Código para el despliegue en FastApi del modelo
+│   ├── app/
+│   │   ├── __init__.py          # Convierte app/ en módulo Python
+│   │   ├── main.py              # Servidor FastAPI + endpoints
+│   │   ├── schemas.py           # Modelos Pydantic de validación
+│   │   └── utils.py             # Cálculo de feature importance
+│   ├── models/
+│   |   ├── churn_xgboost_calibrado.pkl  # Modelo serializado (1.2 MB)
+│   ├── tests/
+│   |   ├── __init__.py
+│   |   └── test_api.py          # Tests automatizados (9 tests)
+|   ├── .dockerignore
+|   ├── .gitignore
+|   ├── Dockerfile
+|   ├── README.md 
+|   └── requeriments.txt
+│
+├── datascience
+│   ├── datasets/               # Conjunto de datos para análisis
+│   │   ├── dataset_feature_enginnering_final.csv
+│   │   ├── dataset_limpio_final.csv
+│   │   └── dataset_sucio_final.csv
+│   ├── models/
+│   |   └── churn_xgboost_calibrado.pkl  # Modelo serializado (1.2 MB)
+|   ├── notebooks/                   # Notebooks de desarrollo (no en producción)
+|   │   ├── Análisis_exploratorio.ipynb
+|   │   ├── CONTRATO_INTEGRACIÓN_DS_BACKEND.ipynb
+|   │   ├── Eda_dataset_final.ipynb
+|   │   ├── Feature_Enginnering_final.ipynb
+|   │   ├── Generacion_dataset_final.ipynb
+|   │   ├── one_hot_encoding_&_modelado.ipynb
+|   │   ├── optimizacion_modelos.ipynb
+|   |   └── pipeline_serialization.ipynb
+│   └──   READMEds.md
+├── .DS_Store
+├── .gitignore
+└── README.md                         # README de todo el repositorio
+```
+
+
+```
+churn_insight_hackaton/
 ├── backend/
 │
 ├── churn-api/                   # Aquí se encuentra todo el código para el despliegue en FastApi
@@ -588,7 +633,7 @@ churn-insight-hackaton/
 ├── requeriments.txt
 │
 ├── datascience
-│   ├── datasets/
+│   ├── datasets/               # Conjunto de datos para análisis
 │   │   ├── dataset_feature_enginnering_final.csv
 │   │   ├── dataset_limpio_final.csv
 │   │   └── dataset_sucio_final.csv
@@ -643,4 +688,3 @@ Desarrollado con ❤️ por el equipo ChurnInsight para **No Country - Hackathon
 ---
 
 > **Nota**: Este microservicio es parte del proyecto ChurnInsight, que incluye también componentes de Backend (Spring Boot) y Frontend. Para la documentación completa del sistema, consulta el [README principal](https://github.com/GuilleLondero/churn_insight_hackathon).
-
