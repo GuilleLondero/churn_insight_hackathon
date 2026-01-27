@@ -590,3 +590,4 @@ Desarrollado como parte del **Hackathon ONE – No Country 2025** por el **Equip
   <br>
   Desarrollado con ❤️ por el Equipo 43
 </p>
+
